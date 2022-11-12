@@ -29,6 +29,10 @@ Functions list:
 
 module WebSession
 
+export add_session, add_session_data, get_cookie, get_session, get_session_data,
+get_session_id, get_session_storage, id, remove_session, SessionStorageManagement,
+start_session, session_exists, Session
+
 import SHA, HTTP, Dates, Logging, Random
 import Genie
 
