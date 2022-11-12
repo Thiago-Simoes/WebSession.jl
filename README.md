@@ -1,4 +1,4 @@
-# JuliaWebSession.jl
+# WebSession.jl
 Pure Julia package to easily manage Sessions using Genie.jl.
 
 > ### Why did I create this package if GenieSession exists?
