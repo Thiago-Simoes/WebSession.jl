@@ -27,7 +27,7 @@ Functions list:
 
 =#
 
-module JuliaWebSession
+module WebSession
 
 import SHA, HTTP, Dates, Logging, Random
 import Genie
