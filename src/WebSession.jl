@@ -167,15 +167,11 @@ function get_session(
         session = [s for s in SessionStorage if s.id == session_id]
         @assert length(session) == 1 "Cannot have more than one session with the same id"
         
-        println("Session: ", session)
-
         if ((Dates.now() - session[1].date) > Dates.Second(MAX_AGE))
-            println("Session expired")
             remove_session(session_id)
             return start_session(req, res)
         end
 
-        println("Ok here ")
 
         return session[1]
     end
@@ -207,8 +203,6 @@ function get_session_data(
 )::Union{Any, Nothing}
     session = get_session(req, res)
     if session !== nothing && !isempty(session.data)
-        println("\n\n")
-        println(session.data)
         return session.data[key]
     end
     return nothing
