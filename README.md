@@ -1,4 +1,5 @@
 # WebSession.jl
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://thiago-simoes.github.io/WebSession.jl/)  
 Pure Julia package to easily manage Sessions using Genie.jl.
 
 > ### Why did I create this package if GenieSession exists?
