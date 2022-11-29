@@ -35,6 +35,11 @@ start_session, session_exists, Session
 
 import SHA, HTTP, Dates, Logging, Random
 import Genie
+using DataFrames
+
+const START_TIME = Dates.now()
+
+const LOG_SIZE_LIMIT = 20000
 
 const SESSION_COOKIE_NAME::String = "JuliaSession"
 
@@ -135,8 +140,10 @@ function get_cookie(
     cookies = HTTP.cookies(payload)
     cookie = [cookie for cookie in cookies if cookie.name == name]
     if length(cookie) == 1
+        @info "Returning cookie '$name' for payload"
         return cookie[1]
     end
+    @warn "No cookie '$name' find for: $payload"
     return nothing
 end
 
@@ -203,8 +210,10 @@ function get_session_data(
 )::Union{Any, Nothing}
     session = get_session(req, res)
     if session !== nothing && !isempty(session.data)
+        @info "Getting $key info for session in payload"
         return session.data[key]
     end
+    @warn "No session or empty session for id: $session_id"
     return nothing
 end
 
@@ -247,9 +256,11 @@ The function returns the session if it exists, otherwise it returns nothing.
 function get_session_storage(session_id::String)::Union{Session, Nothing}
     for session in SessionStorage
         if session.id == session_id
+            @info "Getting session storage for id: $session_id"
             return session
         end
     end
+    @warn "No session find for id: $session_id"
     return nothing
 end
 
@@ -281,6 +292,7 @@ The function returns nothing.
 function remove_session(session_id::String)::Nothing
     names = [s.id for s in SessionStorage]
     index = findfirst((x -> x == session_id), names)
+    @info "Removing session for id: $session_id"
     deleteat!(SessionStorage, index)
     nothing  
 end
@@ -327,6 +339,7 @@ function start_session(req::HTTP.Request, res::HTTP.Response)::Session
         HTTP.Cookies.addcookie!(res, new_session_cookie)
         session = Session(session_id)
         add_session(session)
+        @info "Session started with id: $session_id"
         return session
     end
     return get_session(req, res)
@@ -359,6 +372,52 @@ end
 
 function __init__()
     @async SessionStorageManagement()
+    __do_log__()
+    nothing
+end
+
+function __do_log__()
+    @async while true
+        eval(
+            quote
+                LOG_DATE = Dates.now()
+            end
+        )
+        __clean_log__()
+        sleep(1800)
+    end
+
+    @async while true
+        eval(
+            quote
+                if @isdefined (io)
+                    close(io)
+                end
+                log_name = string(Dates.today(), "_", Dates.hour(LOG_DATE), "_", Dates.minute(LOG_DATE), "_", Dates.second(LOG_DATE), "_WebSessionLog.log")
+                io = open("logs/$log_name", "a+")
+                logger = Logging.SimpleLogger(io, Logging.Info)
+                Logging.global_logger(logger)
+            end
+        )
+        sleep(1)
+    end
+end
+
+function __clean_log__()
+    println("Cleaning log")
+    log_files = [f for f in readdir("logs") if occursin(r"WebSessionLog.log", f)]
+    logs = DataFrame(:File => log_files, :Date => [string(f[1:10] * "T" * f[12:13] * ":" * f[15:16] * ":" * f[18:19]) for f in log_files], :Size => [filesize("logs/$f") for f in log_files])
+    DataFrames.sort!(logs, :Date, rev=false)
+    logs = logs[1:end-1, :]
+    size = sum(logs.Size)
+    if size > LOG_SIZE_LIMIT
+        for i in 1:nrow(logs)
+            if size > LOG_SIZE_LIMIT
+                rm("logs/" * logs[i, :File])
+                size -= logs[i, :Size]
+            end
+        end
+    end
 end
 
 end # module EasySession

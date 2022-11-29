@@ -1,0 +1,8 @@
+┌ Info: Returning cookie 'JuliaSession' for payload
+└ @ WebSession d:\USER\WebSession.jl\src\WebSession.jl:143
+┌ Info: Getting session storage for id: e97ce85795f53ffbaa886981944dca4f9b06675b5fc2d5b09036638e1bd8540eb0054fae9e21c0e0cda9589e2ad2324914a92fc9e8b53315fa93df6a3a2608c2
+└ @ WebSession d:\USER\WebSession.jl\src\WebSession.jl:259
+┌ Info: Returning cookie 'JuliaSession' for payload
+└ @ WebSession d:\USER\WebSession.jl\src\WebSession.jl:143
+┌ Info: Getting session storage for id: e97ce85795f53ffbaa886981944dca4f9b06675b5fc2d5b09036638e1bd8540eb0054fae9e21c0e0cda9589e2ad2324914a92fc9e8b53315fa93df6a3a2608c2
+└ @ WebSession d:\USER\WebSession.jl\src\WebSession.jl:259
