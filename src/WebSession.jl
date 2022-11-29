@@ -39,7 +39,7 @@ using DataFrames
 
 const START_TIME = Dates.now()
 
-const LOG_SIZE_LIMIT = 20000
+const LOG_SIZE_LIMIT = 20000000
 
 const SESSION_COOKIE_NAME::String = "JuliaSession"
 
