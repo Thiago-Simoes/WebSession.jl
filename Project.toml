@@ -1,7 +1,7 @@
 name = "WebSession"
 uuid = "73909f5d-5828-4c22-bf39-7339a58e168d"
 authors = ["Thiago Simoes <thiago.simoes@ufrj.br>"]
-version = "0.1.2"
+version = "0.1.3
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
