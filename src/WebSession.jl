@@ -404,7 +404,6 @@ function __do_log__()
 end
 
 function __clean_log__()
-    println("Cleaning log")
     log_files = [f for f in readdir("logs") if occursin(r"WebSessionLog.log", f)]
     logs = DataFrame(:File => log_files, :Date => [string(f[1:10] * "T" * f[12:13] * ":" * f[15:16] * ":" * f[18:19]) for f in log_files], :Size => [filesize("logs/$f") for f in log_files])
     DataFrames.sort!(logs, :Date, rev=false)
